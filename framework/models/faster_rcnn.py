@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Layer, Lambda, Input, Conv2D, TimeDistributed, Dense, Flatten, BatchNormalization, Dropout
-from utils import bbox_utils, train_utils
+from ..utils import bbox_utils, train_utils
 
 class Decoder(Layer):
     """Generating bounding boxes and labels from faster rcnn predictions.
@@ -17,7 +17,7 @@ class Decoder(Layer):
             1 to total label number
         pred_scores = (batch_size, top_n)
     """
-    def __init__(self, variances, total_labels, max_total_size=200, score_threshold=0.5, **kwargs):
+    def __init__(self, variances, total_labels, max_total_size=200, score_threshold=0.67, **kwargs):
         super(Decoder, self).__init__(**kwargs)
         self.variances = variances
         self.total_labels = total_labels
@@ -151,10 +151,10 @@ class RoIDelta(Layer):
         # IoU map has iou values for every gt boxes and we merge these values column wise
         merged_iou_map = tf.reduce_max(iou_map, axis=2)
         #
-        pos_mask = tf.greater(merged_iou_map, 0.5)
+        pos_mask = tf.greater(merged_iou_map, 0.67)
         pos_mask = train_utils.randomly_select_xyz_mask(pos_mask, tf.constant([total_pos_bboxes], dtype=tf.int32))
         #
-        neg_mask = tf.logical_and(tf.less(merged_iou_map, 0.5), tf.greater(merged_iou_map, 0.1))
+        neg_mask = tf.logical_and(tf.less(merged_iou_map, 0.47), tf.greater(merged_iou_map, 0.1))
         neg_mask = train_utils.randomly_select_xyz_mask(neg_mask, tf.constant([total_neg_bboxes], dtype=tf.int32))
         #
         gt_boxes_map = tf.gather(gt_boxes, max_indices_each_gt_box, batch_dims=1)
@@ -216,7 +216,7 @@ class RoIPooling(Layer):
         final_pooling_feature_map = tf.reshape(pooling_feature_map, (batch_size, total_bboxes, pooling_feature_map.shape[1], pooling_feature_map.shape[2], pooling_feature_map.shape[3]))
         return final_pooling_feature_map
 
-def get_model(feature_extractor, rpn_model, anchors, hyper_params, mode="training"):
+def get_model_frcnn(feature_extractor, rpn_model, anchors, hyper_params, mode="training"):
     """Generating rpn model for given backbone base model and hyper params.
     inputs:
         feature_extractor = feature extractor layer from the base model
@@ -277,7 +277,7 @@ def get_model(feature_extractor, rpn_model, anchors, hyper_params, mode="trainin
         #
     return frcnn_model
 
-def init_model(model, hyper_params):
+def init_model_frcnn(model, hyper_params):
     """Generating dummy data for initialize model.
     In this way, the training process can continue from where it left off.
     inputs:

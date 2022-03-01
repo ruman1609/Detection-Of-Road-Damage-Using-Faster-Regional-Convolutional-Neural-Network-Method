@@ -3,7 +3,7 @@ from tensorflow.keras.applications.vgg16 import VGG16
 from tensorflow.keras.layers import Conv2D
 from tensorflow.keras.models import Model, Sequential
 
-def get_model(hyper_params):
+def get_model_vgg16(hyper_params):
     """Generating rpn model for given hyper params.
     inputs:
         hyper_params = dictionary
@@ -26,4 +26,4 @@ def init_model(model):
     inputs:
         model = tf.keras.model
     """
-    model(tf.random.uniform((1, 500, 500, 3)))
+    model(tf.random.uniform((1, 512, 512, 3)))

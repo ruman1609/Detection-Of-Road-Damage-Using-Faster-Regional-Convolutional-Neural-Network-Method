@@ -1,0 +1,9 @@
+tensorflow==2.1
+numpy
+jupyter
+sklearn
+matplotlib
+opencv-python
+pillow
+pandas
+tensorflow-datasets

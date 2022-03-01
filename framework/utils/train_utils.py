@@ -1,20 +1,14 @@
 import tensorflow as tf
 import math
-from utils import bbox_utils
+from . import bbox_utils
 
 RPN = {
     "vgg16": {
-        "img_size": 500,
-        "feature_map_shape": 31,
+        "img_size": 512,
+        "feature_map_shape": 32,  # from 31 to 32
         "anchor_ratios": [1., 2., 1./2.],
         "anchor_scales": [128, 256, 512],
     },
-    "mobilenet_v2": {
-        "img_size": 500,
-        "feature_map_shape": 32,
-        "anchor_ratios": [1., 2., 1./2.],
-        "anchor_scales": [128, 256, 512],
-    }
 }
 
 def get_hyper_params(backbone, **kwargs):
@@ -29,7 +23,7 @@ def get_hyper_params(backbone, **kwargs):
     hyper_params["pre_nms_topn"] = 6000
     hyper_params["train_nms_topn"] = 1500
     hyper_params["test_nms_topn"] = 300
-    hyper_params["nms_iou_threshold"] = 0.7
+    hyper_params["nms_iou_threshold"] = 0.67
     hyper_params["total_pos_bboxes"] = 128
     hyper_params["total_neg_bboxes"] = 128
     hyper_params["pooling_size"] = (7, 7)
@@ -132,7 +126,7 @@ def calculate_rpn_actual_outputs(anchors, gt_boxes, gt_labels, hyper_params):
     # IoU map has iou values for every gt boxes and we merge these values column wise
     merged_iou_map = tf.reduce_max(iou_map, axis=2)
     #
-    pos_mask = tf.greater(merged_iou_map, 0.7)
+    pos_mask = tf.greater(merged_iou_map, 0.67)
     #
     valid_indices_cond = tf.not_equal(gt_labels, -1)
     valid_indices = tf.cast(tf.where(valid_indices_cond), tf.int32)

@@ -1,6 +1,6 @@
 import tensorflow as tf
 import numpy as np
-from utils import bbox_utils
+from . import bbox_utils
 
 def init_stats(labels):
     stats = {}
@@ -43,7 +43,7 @@ def update_stats(pred_bboxes, pred_labels, pred_scores, gt_boxes, gt_labels, sta
             stats[pred_label]["scores"].append(score)
             stats[pred_label]["tp"].append(0)
             stats[pred_label]["fp"].append(0)
-            if iou >= 0.5 and pred_label == gt_label and gt_id not in true_labels:
+            if iou >= 0.67 and pred_label == gt_label and gt_id not in true_labels:
                 stats[pred_label]["tp"][-1] = 1
                 true_labels.append(gt_id)
             else:

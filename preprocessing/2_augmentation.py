@@ -36,10 +36,11 @@ def augmentation_maker(augmented, image, typeAug, filename):
     #     cv2.waitKey(0)
     #     break
 
-def augmentation_flip_h(root, x1, y1, x2, y2, width, height): # Horizontal Flip
+def augmentation_flip_h(root, width, height): # Horizontal Flip
     augmented = ET.fromstring(ET.tostring(root))
     filename = augmented.find("filename").text
     for member in augmented.findall("object"):
+        x1, y1, x2, y2 = [int(data.text) for data in member.find("bndbox")]
         bbx = member.find("bndbox")
         bbx.find("xmin").text = f"{height - x2}"
         bbx.find("xmax").text = f"{height - x1}"
@@ -47,10 +48,11 @@ def augmentation_flip_h(root, x1, y1, x2, y2, width, height): # Horizontal Flip
     flip = cv2.flip(image, 1)
     augmentation_maker(augmented, flip, "horizontalFlip", filename)
 
-def augmentation_flip_v(root, x1, y1, x2, y2, width, height): # Vertical Flip
+def augmentation_flip_v(root, width, height): # Vertical Flip
     augmented = ET.fromstring(ET.tostring(root))
     filename = augmented.find("filename").text
     for member in augmented.findall("object"):
+        x1, y1, x2, y2 = [int(data.text) for data in member.find("bndbox")]
         bbx = member.find("bndbox")
         bbx.find("ymin").text = f"{width - y2}"
         bbx.find("ymax").text = f"{width - y1}"
@@ -58,10 +60,11 @@ def augmentation_flip_v(root, x1, y1, x2, y2, width, height): # Vertical Flip
     flip = cv2.flip(image, 0)
     augmentation_maker(augmented, flip, "verticalFlip", filename)
 
-def augmentation_rotate_90r(root, x1, y1, x2, y2, width, height): # Rotate 90 Right
+def augmentation_rotate_90r(root, width, height): # Rotate 90 Right
     augmented = ET.fromstring(ET.tostring(root))
     filename = augmented.find("filename").text
     for member in augmented.findall("object"):
+        x1, y1, x2, y2 = [int(data.text) for data in member.find("bndbox")]
         bbx = member.find("bndbox")
         bbx.find("xmin").text = f"{width - y2}"
         bbx.find("xmax").text = f"{width - y1}"
@@ -71,10 +74,11 @@ def augmentation_rotate_90r(root, x1, y1, x2, y2, width, height): # Rotate 90 Ri
     rotate = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
     augmentation_maker(augmented, rotate, "90rRotate", filename)
 
-def augmentation_rotate_90l(root, x1, y1, x2, y2, width, height): # Rotate 90 Left
+def augmentation_rotate_90l(root, width, height): # Rotate 90 Left
     augmented = ET.fromstring(ET.tostring(root))
     filename = augmented.find("filename").text
     for member in augmented.findall("object"):
+        x1, y1, x2, y2 = [int(data.text) for data in member.find("bndbox")]
         bbx = member.find("bndbox")
         bbx.find("ymin").text = f"{height - x2}"
         bbx.find("ymax").text = f"{height - x1}"
@@ -84,16 +88,15 @@ def augmentation_rotate_90l(root, x1, y1, x2, y2, width, height): # Rotate 90 Le
     rotate = cv2.rotate(image, cv2.ROTATE_90_COUNTERCLOCKWISE)
     augmentation_maker(augmented, rotate, "90lRotate", filename)
 
+index = 0
 for file in glob.glob(readyPath + "/*.xml"):
     tree = ET.parse(file)
     root = tree.getroot()
     width, height, _ = [int(data.text) for data in root.find("size")]
-    for member in root.findall("object"):
-        x1, y1, x2, y2 = [int(data.text) for data in member.find("bndbox")]
-    augmentation_flip_h(root, x1, y1, x2, y2, width, height)
-    augmentation_flip_v(root, x1, y1, x2, y2, width, height)
-    augmentation_rotate_90r(root, x1, y1, x2, y2, width, height)
-    augmentation_rotate_90l(root, x1, y1, x2, y2, width, height)
+    augmentation_flip_h(root, width, height)
+    augmentation_flip_v(root, width, height)
+    augmentation_rotate_90r(root, width, height)
+    augmentation_rotate_90l(root, width, height)
 
     filename = root.find("filename").text
     nameonly, _ = os.path.splitext(filename)

@@ -1,7 +1,7 @@
 import tensorflow as tf
 from PIL import Image, ImageDraw
 import matplotlib.pyplot as plt
-from utils import bbox_utils
+from . import bbox_utils
 
 def draw_grid_map(img, grid_map, stride):
     """Drawing grid intersection on given image.
