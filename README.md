@@ -8,4 +8,4 @@ It's implemented and tested with **tensorflow 2.1**.
 
 [VGG16](https://www.tensorflow.org/api_docs/python/tf/keras/applications/VGG16) is the only backbone I currently use
 
-> This project forked from [FurkanOM TF Faster R-CNN Repository](https://github.com/FurkanOM/tf-faster-rcnn)
+> This project framework forked from [FurkanOM TF Faster R-CNN Repository](https://github.com/FurkanOM/tf-faster-rcnn)
