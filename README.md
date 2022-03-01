@@ -1,4 +1,4 @@
-# Faster-RCNN
+# Faster-RCNN Model Notice
 
 This is tensorflow Faster-RCNN implementation from scratch supporting to the batch processing.
 All methods are tried to be created in the simplest way for easy understanding.
@@ -9,17 +9,3 @@ It's implemented and tested with **tensorflow 2.1**.
 [VGG16](https://www.tensorflow.org/api_docs/python/tf/keras/applications/VGG16) is the only backbone I currently use
 
 > This project forked from [FurkanOM TF Faster R-CNN Repository](https://github.com/FurkanOM/tf-faster-rcnn)
-
-## Usage
-
-I use this repo as a framework for my thesis.
-
-### References
-
-* VOC 2007 Dataset [[dataset]](http://www.pascal-network.org/challenges/VOC/voc2007/workshop/index.html)
-* VOC 2012 Dataset [[dataset]](http://www.pascal-network.org/challenges/VOC/voc2012/workshop/index.html)
-* Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks [[paper]](https://arxiv.org/abs/1506.01497)
-* Object Detection Metrics [[code]](https://github.com/rafaelpadilla/Object-Detection-Metrics)
-* Mask RCNN [[code]](https://github.com/matterport/Mask_RCNN)
-* keras-frcnn [[code]](https://github.com/small-yellow-duck/keras-frcnn)
-* PyTorch Faster RCNN [[code]](https://github.com/rbgirshick/py-faster-rcnn)
