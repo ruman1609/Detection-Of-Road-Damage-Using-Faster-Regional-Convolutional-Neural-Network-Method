@@ -1,4 +1,7 @@
 __pycache__
-logs/*
-data/*
-trained/*
+framework/logs/*
+framework/data/*
+framework/trained/*
+*.tfrecord
+dataset/*
+*.lnk
