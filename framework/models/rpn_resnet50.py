@@ -1,5 +1,5 @@
 import tensorflow as tf
-from tensorflow.keras.applications.vgg16 import VGG16
+from tensorflow.keras.applications.resnet50 import ResNet50
 from tensorflow.keras.layers import Conv2D
 from tensorflow.keras.models import Model, Sequential
 
@@ -13,9 +13,9 @@ def get_rpn_model(hyper_params):
         feature_extractor = feature extractor layer from the base model
     """
     img_size = hyper_params["img_size"]
-    base_model = VGG16(include_top=False, input_shape=(img_size, img_size, 3))
+    base_model = ResNet50(include_top=False, input_shape=(img_size, img_size, 3))
     print(base_model.summary())
-    feature_extractor = base_model.get_layer("block5_conv3")
+    feature_extractor = base_model.get_layer("conv4_block6_out")
     output = Conv2D(1024, (3, 3), activation="relu", padding="same", name="rpn_conv")(feature_extractor.output)
     output = Conv2D(512, (3, 3), activation="relu", padding="same", name="rpn_conv_1")(output)
     rpn_cls_output = Conv2D(hyper_params["anchor_count"], (1, 1), activation="sigmoid", name="rpn_cls")(output)

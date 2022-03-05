@@ -2,13 +2,17 @@ import tensorflow as tf
 import math
 from . import bbox_utils
 
+DEFAULT = {
+    "img_size": 512,
+    "feature_map_shape": 32,  # from 31 to 32
+    "anchor_ratios": [1., 2., 1./2.],
+    "anchor_scales": [128, 256, 512],
+}
+
 RPN = {
-    "vgg16": {
-        "img_size": 512,
-        "feature_map_shape": 32,  # from 31 to 32
-        "anchor_ratios": [1., 2., 1./2.],
-        "anchor_scales": [128, 256, 512],
-    },
+    "vgg16": DEFAULT,
+    "mobilenet_v2": DEFAULT,
+    "resnet50": DEFAULT
 }
 
 def get_hyper_params(backbone, **kwargs):
@@ -140,7 +144,7 @@ def calculate_rpn_actual_outputs(anchors, gt_boxes, gt_labels, hyper_params):
     pos_count = tf.reduce_sum(tf.cast(pos_mask, tf.int32), axis=-1)
     neg_count = (total_pos_bboxes + total_neg_bboxes) - pos_count
     #
-    neg_mask = tf.logical_and(tf.less(merged_iou_map, 0.3), tf.logical_not(pos_mask))
+    neg_mask = tf.logical_and(tf.less(merged_iou_map, 0.27), tf.logical_not(pos_mask))
     neg_mask = randomly_select_xyz_mask(neg_mask, neg_count)
     #
     pos_labels = tf.where(pos_mask, tf.ones_like(pos_mask, dtype=tf.float32), tf.constant(-1.0, dtype=tf.float32))
@@ -194,13 +198,39 @@ def rpn_cls_loss(*args):
     lf = tf.losses.BinaryCrossentropy()
     return lf(target, output)
 
-def reg_loss(*args):
+def reg_loss_frcnn(*args):
+    """
+        The regressor loss
+        This is smooth L1 loss calculated only on positive anchors
+        Args:
+            y_true, the true regressor values
+            y_pred, the predicted regressor values
+        Returns:
+            the loss as a scalar
+    """
+    # modified: https://github.com/FurkanOM/tf-rpn/issues/2#issuecomment-724155215
+    # original: https://github.com/FurkanOM/tf-faster-rcnn/blob/db54f3d873d74cec50b9d21409dcb831f271b7bb/utils/train_utils.py#L203
+    y_true, y_pred = args if len(args) == 2 else args[0]
+    smooth_l1 = tf.keras.losses.Huber(reduction=tf.keras.losses.Reduction.NONE)
+    batch_size = tf.shape(y_pred)[0]
+    y_true = tf.reshape(y_true, [batch_size, -1, 4])
+    y_pred = tf.reshape(y_pred, [batch_size, -1, 4])
+
+    loss = smooth_l1(y_true, y_pred)
+    loss = tf.reduce_sum(loss, axis=-1)
+
+    valid = tf.math.reduce_any(tf.not_equal(y_true, 0.0), axis=-1)
+    valid = tf.cast(valid, tf.float32)
+    loss = tf.reduce_sum(loss * valid, axis=-1) # loss vector for each batch
+    total_pos_boxes = tf.math.maximum(1.0, tf.reduce_sum(valid, axis=-1))
+    return tf.math.reduce_mean(tf.truediv(loss, total_pos_boxes))
+
+def reg_loss_rpn(*args):
     """Calculating rpn / faster rcnn regression loss value.
     Reg value should be different than zero for actual values.
     Because of this we only take into account non zero values.
     inputs:
         *args = could be (y_true, y_pred) or ((y_true, y_pred), )
-
     outputs:
         loss = Huber it's almost the same with the smooth L1 loss
     """

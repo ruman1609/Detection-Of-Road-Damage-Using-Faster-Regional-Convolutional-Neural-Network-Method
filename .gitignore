@@ -5,3 +5,5 @@ framework/trained/*
 *.tfrecord
 dataset/*
 *.lnk
+logs/*
+trained/*

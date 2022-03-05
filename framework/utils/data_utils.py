@@ -1,6 +1,5 @@
 import os
 import tensorflow as tf
-import tensorflow_datasets as tfds
 from PIL import Image
 import numpy as np
 
@@ -17,7 +16,7 @@ def preprocessing_before_frcnn(image_data, final_height, final_width, apply_augm
     """
     img = image_data["image"]
     gt_boxes = image_data["bbox"]
-    gt_labels = tf.cast(image_data["label"] + 1, tf.int32)
+    gt_labels = image_data["label"]
     # if evaluate:
     #     not_diff = tf.logical_not(image_data["objects"]["is_difficult"])
     #     gt_boxes = gt_boxes[not_diff]
@@ -66,20 +65,6 @@ def flip_horizontally(img, gt_boxes):
                                 gt_boxes[..., 2],
                                 1.0 - gt_boxes[..., 1]], -1)
     return flipped_img, flipped_gt_boxes
-
-def get_dataset(name, split, data_dir="~/tensorflow_datasets"):
-    """Get tensorflow dataset split and info.
-    inputs:
-        name = name of the dataset, voc/2007, voc/2012, etc.
-        split = data split string, should be one of ["train", "validation", "test"]
-        data_dir = read/write path for tensorflow datasets
-    outputs:
-        dataset = tensorflow dataset split
-        info = tensorflow dataset info
-    """
-    assert split in ["train", "train+validation", "validation", "test"]
-    dataset, info = tfds.load(name, split=split, data_dir=data_dir, with_info=True)
-    return dataset, info
 
 def get_total_item_size(info, split):
     """Get total item size for given split.
