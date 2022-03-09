@@ -40,7 +40,7 @@ class TextButton : AppCompatTextView {
 
     private fun generate() {
         text = title
-        textSize = 20f
+        textSize = 28f
         compoundDrawablePadding = 12.toPx.toInt()
         gravity = Gravity.CENTER_VERTICAL
 
@@ -52,7 +52,7 @@ class TextButton : AppCompatTextView {
             setCompoundDrawablesWithIntrinsicBounds(iconCompat, null, null, null)
         }
 
-        background = ContextCompat.getDrawable(context, R.drawable.text_button_bg)
+        background = ContextCompat.getDrawable(context, R.drawable.text_button_ripple)
         setPadding(8.toPx.toInt())
         isFocusable = true
         isClickable = true

@@ -3,13 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Kuliah/SKRIPSI &amp; PKM 2021/Program/Mobile/app/src/main/res/drawable/ic_camera.xml" value="0.1895" />
+        <entry key="..\:/Kuliah/SKRIPSI &amp; PKM 2021/Program/Mobile/app/src/main/res/drawable/ic_gallery.xml" value="0.1895" />
         <entry key="..\:/Kuliah/SKRIPSI &amp; PKM 2021/Program/Mobile/app/src/main/res/drawable/text_button_bg.xml" value="0.177" />
+        <entry key="..\:/Kuliah/SKRIPSI &amp; PKM 2021/Program/Mobile/app/src/main/res/drawable/text_button_ripple.xml" value="0.1895" />
         <entry key="..\:/Kuliah/SKRIPSI &amp; PKM 2021/Program/Mobile/app/src/main/res/layout/activity_main.xml" value="0.26875" />
         <entry key="..\:/Kuliah/SKRIPSI &amp; PKM 2021/Program/Mobile/app/src/main/res/layout/fragment_menu.xml" value="0.33" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_16_PREVIEW" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_16" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

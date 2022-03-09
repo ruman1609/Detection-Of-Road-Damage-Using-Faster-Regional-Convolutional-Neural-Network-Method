@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'androidx.navigation.safeargs'
 }
 
 android {
@@ -8,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.rudyrachman16.skripsi"
-        minSdk 22
+        minSdk 21
         targetSdk 31
         versionCode 1
         versionName "1.0"

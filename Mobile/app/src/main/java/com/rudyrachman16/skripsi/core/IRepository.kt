@@ -1,9 +1,11 @@
 package com.rudyrachman16.skripsi.core
 
-import android.content.ContentResolver
-import android.graphics.Bitmap
+import android.content.Intent
 import android.net.Uri
+import androidx.activity.result.ActivityResultLauncher
 
 interface IRepository {
-    fun savePicture(cr: ContentResolver, bitmap: Bitmap, uri: Uri): Boolean
+    fun createTakePictureIntent(launcher: ActivityResultLauncher<Intent>)
+    fun savePictureQ(): String
+    fun getTargetUri(): Uri?
 }
