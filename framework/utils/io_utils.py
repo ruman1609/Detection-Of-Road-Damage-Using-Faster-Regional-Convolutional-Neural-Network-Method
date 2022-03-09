@@ -12,7 +12,27 @@ def get_log_path(model_type, backbone="vgg16", custom_postfix=""):
     outputs:
         log_path = tensorboard log path, for example: "logs/rpn_mobilenet_v2/{date}"
     """
-    return "logs/{}_{}{}/{}".format(model_type, backbone, custom_postfix, datetime.now().strftime("%Y%m%d-%H%M%S"))
+    main_path = "logs"
+    if not os.path.exists(main_path):
+        os.makedirs(main_path)
+    return os.path.join(main_path, "{}_{}{}/{}".format(model_type, backbone, custom_postfix, datetime.now().strftime("%Y%m%d-%H%M%S")))
+
+def get_history_path(model_type, backbone="vgg16", custom_postfix=""):
+    """Generating log path from model_type value for CSVLogger.
+    inputs:
+        model_type = "rpn", "faster_rcnn"
+        backbone = "vgg16", "mobilenet_v2"
+        custom_postfix = any custom string for log folder name
+    outputs:
+        log_path = tensorboard log path, for example: "history/faster_rcnn_vgg16"
+    """
+    main_path = "history"
+    if not os.path.exists(main_path):
+        os.makedirs(main_path)
+    path = os.path.join(main_path, "{}_{}{}.csv".format(model_type, backbone, custom_postfix))
+    if not os.path.isfile(path):
+        open(path, "x")
+    return path
 
 def get_model_path(model_type, backbone="vgg16"):
     """Generating model path from model_type value for save/load model weights.
@@ -20,13 +40,28 @@ def get_model_path(model_type, backbone="vgg16"):
         model_type = "rpn", "faster_rcnn"
         backbone = "vgg16", "mobilenet_v2"
     outputs:
-        model_path = os model path, for example: "trained/rpn_vgg16_model_weights.h5"
+        model_path = os model path, for example: "trained/rpn_vgg16_model.h5"
     """
     main_path = "trained"
     if not os.path.exists(main_path):
         os.makedirs(main_path)
-    model_path = os.path.join(main_path, "{}_{}_model_weights.h5".format(model_type, backbone))
+    model_path = os.path.join(main_path, "{}_{}_model.h5".format(model_type, backbone))
     return model_path
+
+def get_weight_path(model_type, backbone="vgg16"):
+    """Generating model path from model_type value for save/load model weights.
+    inputs:
+        model_type = "rpn", "faster_rcnn"
+        backbone = "vgg16", "mobilenet_v2"
+    outputs:
+        model_path = os model path, for example: "trained/rpn_vgg16_weights.h5"
+    """
+    main_path = "trained"
+    if not os.path.exists(main_path):
+        os.makedirs(main_path)
+    model_path = os.path.join(main_path, "{}_{}_weights.h5".format(model_type, backbone))
+    return model_path
+
 
 def handle_args():
     """Handling of command line arguments using argparse library.

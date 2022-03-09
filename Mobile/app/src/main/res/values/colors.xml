@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="orange_custom">#f48d1f</color>
+    <color name="orange_custom_light">#ffbe53</color>
+    <color name="orange_custom_dark">#bb5f00</color>
+    <color name="light_green600">#7cb342</color>
+    <color name="light_green600_light">#aee571</color>
+    <color name="light_green600_dark">#4b830d</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

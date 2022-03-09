@@ -211,13 +211,13 @@ def reg_loss_frcnn(*args):
     # modified: https://github.com/FurkanOM/tf-rpn/issues/2#issuecomment-724155215
     # original: https://github.com/FurkanOM/tf-faster-rcnn/blob/db54f3d873d74cec50b9d21409dcb831f271b7bb/utils/train_utils.py#L203
     y_true, y_pred = args if len(args) == 2 else args[0]
-    smooth_l1 = tf.keras.losses.Huber(reduction=tf.keras.losses.Reduction.NONE)
+    smooth_l1 = tf.keras.losses.MeanAbsoluteError(reduction=tf.keras.losses.Reduction.NONE)
     batch_size = tf.shape(y_pred)[0]
     y_true = tf.reshape(y_true, [batch_size, -1, 4])
     y_pred = tf.reshape(y_pred, [batch_size, -1, 4])
 
     loss = smooth_l1(y_true, y_pred)
-    loss = tf.reduce_sum(loss, axis=-1)
+    # loss = tf.reduce_sum(loss, axis=-1)
 
     valid = tf.math.reduce_any(tf.not_equal(y_true, 0.0), axis=-1)
     valid = tf.cast(valid, tf.float32)
@@ -237,9 +237,9 @@ def reg_loss_rpn(*args):
     y_true, y_pred = args if len(args) == 2 else args[0]
     y_pred = tf.reshape(y_pred, (tf.shape(y_pred)[0], -1, 4))
     #
-    loss_fn = tf.losses.Huber(reduction=tf.losses.Reduction.NONE)
+    loss_fn = tf.keras.losses.MeanAbsoluteError(reduction=tf.keras.losses.Reduction.NONE)
     loss_for_all = loss_fn(y_true, y_pred)
-    loss_for_all = tf.reduce_sum(loss_for_all, axis=-1)
+    # loss_for_all = tf.reduce_sum(loss_for_all, axis=-1)
     #
     pos_cond = tf.reduce_any(tf.not_equal(y_true, tf.constant(0.0)), axis=-1)
     pos_mask = tf.cast(pos_cond, dtype=tf.float32)
