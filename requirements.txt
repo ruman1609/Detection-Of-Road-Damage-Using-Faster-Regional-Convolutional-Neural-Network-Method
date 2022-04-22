@@ -1,9 +1,0 @@
-tensorflow==2.0
-numpy
-jupyter
-sklearn
-matplotlib
-opencv-python
-pillow
-pandas
-tensorflow-datasets

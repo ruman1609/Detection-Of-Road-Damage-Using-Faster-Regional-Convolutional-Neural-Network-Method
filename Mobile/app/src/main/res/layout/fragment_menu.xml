@@ -8,12 +8,12 @@
 
     <com.rudyrachman16.skripsi.custom.TextButton
         android:id="@+id/fromCamera"
+        style="@style/ButtonThemeChoice"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:minHeight="48dp"
         app:icon="@drawable/ic_camera"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -23,12 +23,12 @@
 
     <com.rudyrachman16.skripsi.custom.TextButton
         android:id="@+id/fromGallery"
+        style="@style/ButtonThemeChoice"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:minHeight="48dp"
         app:icon="@drawable/ic_gallery"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -37,16 +37,55 @@
         app:text="@string/gallery" />
 
     <ImageView
-        android:id="@+id/dummyTest"
+        android:id="@+id/resultImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:contentDescription="@string/confirmation_choose_image"
+        app:layout_constraintBottom_toTopOf="@+id/cancelImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fromGallery"
+        tools:ignore="ImageContrastCheck"
         tools:src="@tools:sample/avatars" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/confirmImage"
+        style="@style/ButtonThemeConfirmation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:drawableStart="@drawable/ic_check"
+        android:text="@string/confirm"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cancelImage" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/cancelImage"
+        style="@style/ButtonThemeConfirmation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:drawableStart="@drawable/ic_close"
+        android:text="@string/cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/confirmImage"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <include
+        android:id="@+id/loadingProcess"
+        layout="@layout/layout_loading_process"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

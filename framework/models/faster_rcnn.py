@@ -17,7 +17,7 @@ class Decoder(Layer):
             1 to total label number
         pred_scores = (batch_size, top_n)
     """
-    def __init__(self, variances, total_labels, max_total_size=200, score_threshold=0.5, **kwargs):
+    def __init__(self, variances, total_labels, max_total_size=300, score_threshold=0.85, **kwargs):
         super(Decoder, self).__init__(**kwargs)
         self.variances = variances
         self.total_labels = total_labels
@@ -53,7 +53,8 @@ class Decoder(Layer):
                                                                     pred_bboxes, pred_labels,
                                                                     max_output_size_per_class=self.max_total_size,
                                                                     max_total_size=self.max_total_size,
-                                                                    score_threshold=self.score_threshold)
+                                                                    score_threshold=self.score_threshold,
+                                                                    iou_threshold=0.3)
         #
         return final_bboxes, final_labels, final_scores
 
@@ -86,8 +87,8 @@ class RoIBBox(Layer):
         rpn_labels = inputs[1]
         anchors = self.anchors
         #
-        pre_nms_topn = self.hyper_params["pre_nms_topn"]
-        post_nms_topn = self.hyper_params["train_nms_topn"] if self.mode == "training" else self.hyper_params["test_nms_topn"]
+        pre_nms_topn = self.hyper_params["train_pre_nms_topn"] if self.mode == "training" else self.hyper_params["test_pre_nms_topn"]
+        post_nms_topn = self.hyper_params["train_post_nms_topn"] if self.mode == "training" else self.hyper_params["test_post_nms_topn"]
         nms_iou_threshold = self.hyper_params["nms_iou_threshold"]
         variances = self.hyper_params["variances"]
         total_anchors = anchors.shape[0]
@@ -151,7 +152,7 @@ class RoIDelta(Layer):
         # IoU map has iou values for every gt boxes and we merge these values column wise
         merged_iou_map = tf.reduce_max(iou_map, axis=2)
         #
-        pos_mask = tf.greater(merged_iou_map, 0.5)
+        pos_mask = tf.greater_equal(merged_iou_map, 0.5)
         pos_mask = train_utils.randomly_select_xyz_mask(pos_mask, tf.constant([total_pos_bboxes], dtype=tf.int32))
         #
         neg_mask = tf.logical_and(tf.less(merged_iou_map, 0.5), tf.greater(merged_iou_map, 0.1))
@@ -238,10 +239,9 @@ def get_model_frcnn(feature_extractor, rpn_model, anchors, hyper_params, mode="t
     #
     output = TimeDistributed(Flatten(), name="frcnn_flatten")(roi_pooled)
     output = TimeDistributed(Dense(4096, activation="relu"), name="frcnn_fc1")(output)
+    output = TimeDistributed(Dropout(0.5), name="frcnn_dropout1")(output)
     output = TimeDistributed(Dense(4096, activation="relu"), name="frcnn_fc2")(output)
-    output = TimeDistributed(Dropout(0.1), name="frcnn_dropout1")(output)
-    output = TimeDistributed(Dense(2048, activation="relu"), name="frcnn_fc3")(output)
-    output = TimeDistributed(Dropout(0.2), name="frcnn_dropout2")(output)
+    output = TimeDistributed(Dropout(0.5), name="frcnn_dropout2")(output)
     frcnn_cls_predictions = TimeDistributed(Dense(hyper_params["total_labels"], activation="softmax"), name="frcnn_cls")(output)
     frcnn_reg_predictions = TimeDistributed(Dense(hyper_params["total_labels"] * 4, activation="linear"), name="frcnn_reg")(output)
     #
@@ -254,9 +254,9 @@ def get_model_frcnn(feature_extractor, rpn_model, anchors, hyper_params, mode="t
                                                         [roi_bboxes, input_gt_boxes, input_gt_labels])
         #
         loss_names = ["rpn_reg_loss", "rpn_cls_loss", "frcnn_reg_loss", "frcnn_cls_loss"]
-        rpn_reg_loss_layer = Lambda(train_utils.reg_loss_rpn, name=loss_names[0])([rpn_reg_actuals, rpn_reg_predictions])
+        rpn_reg_loss_layer = Lambda(train_utils.reg_loss, name=loss_names[0])([rpn_reg_actuals, rpn_reg_predictions])
         rpn_cls_loss_layer = Lambda(train_utils.rpn_cls_loss, name=loss_names[1])([rpn_cls_actuals, rpn_cls_predictions])
-        frcnn_reg_loss_layer = Lambda(train_utils.reg_loss_frcnn, name=loss_names[2])([frcnn_reg_actuals, frcnn_reg_predictions])
+        frcnn_reg_loss_layer = Lambda(train_utils.reg_loss, name=loss_names[2])([frcnn_reg_actuals, frcnn_reg_predictions])
         frcnn_cls_loss_layer = Lambda(train_utils.frcnn_cls_loss, name=loss_names[3])([frcnn_cls_actuals, frcnn_cls_predictions])
         #
         frcnn_model = Model(inputs=[input_img, input_gt_boxes, input_gt_labels,

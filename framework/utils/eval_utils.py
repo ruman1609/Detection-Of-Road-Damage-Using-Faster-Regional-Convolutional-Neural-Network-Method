@@ -16,12 +16,23 @@ def init_stats(labels):
         }
     return stats
 
-def update_stats(pred_bboxes, pred_labels, pred_scores, gt_boxes, gt_labels, stats):
+def init_hist():
+    hist = []
+    return hist
+
+def totalPrint(printTotal, id):
+    printTotal += 1
+    print(id, end=" " if printTotal < 15 else "\n")
+    if printTotal == 15:
+        printTotal = 0
+
+    return printTotal
+
+def update_stats(pred_bboxes, pred_labels, pred_scores, gt_boxes, gt_labels, stats, hist):
     iou_map = bbox_utils.generate_iou_map(pred_bboxes, gt_boxes)
     merged_iou_map = tf.reduce_max(iou_map, axis=-1)
     max_indices_each_gt = tf.argmax(iou_map, axis=-1, output_type=tf.int32)
     sorted_ids = tf.argsort(merged_iou_map, direction="DESCENDING")
-    #
     count_holder = tf.unique_with_counts(tf.reshape(gt_labels, (-1,)))
     for i, gt_label in enumerate(count_holder[0]):
         if gt_label == -1:
@@ -39,11 +50,25 @@ def update_stats(pred_bboxes, pred_labels, pred_scores, gt_boxes, gt_labels, sta
             gt_id = max_indices_each_gt[batch_id, sorted_id]
             gt_label = int(gt_labels[batch_id, gt_id])
             pred_label = int(pred_label)
+            #
+            hist.append({
+                "iou": iou,
+                "pred_label": pred_label,
+                "gt_label": gt_label,
+                # "result": gt_label == pred_label,
+                "is_duplicate": gt_id in true_labels
+            })
+            if gt_id in true_labels:
+                print("Duplicate,", gt_id)
+                print("IOU:", iou)
+                print("Score:", score)
+                print("---------------------------------------")
+            #
             score = pred_scores[batch_id, sorted_id]
             stats[pred_label]["scores"].append(score)
             stats[pred_label]["tp"].append(0)
             stats[pred_label]["fp"].append(0)
-            if iou >= 0.67 and pred_label == gt_label and gt_id not in true_labels:
+            if iou >= 0.5 and pred_label == gt_label and gt_id not in true_labels:
                 stats[pred_label]["tp"][-1] = 1
                 true_labels.append(gt_id)
             else:
@@ -51,7 +76,7 @@ def update_stats(pred_bboxes, pred_labels, pred_scores, gt_boxes, gt_labels, sta
             #
         #
     #
-    return stats
+    return stats, hist
 
 def calculate_ap(recall, precision):
     ap = 0
@@ -86,12 +111,14 @@ def calculate_mAP(stats):
 
 def evaluate_predictions(dataset, pred_bboxes, pred_labels, pred_scores, labels, batch_size):
     stats = init_stats(labels)
+    hist = init_hist()
     for batch_id, image_data in enumerate(dataset):
         imgs, gt_boxes, gt_labels = image_data
         start = batch_id * batch_size
         end = start + batch_size
         batch_bboxes, batch_labels, batch_scores = pred_bboxes[start:end], pred_labels[start:end], pred_scores[start:end]
-        stats = update_stats(batch_bboxes, batch_labels, batch_scores, gt_boxes, gt_labels, stats)
+        stats, hist = update_stats(batch_bboxes, batch_labels, batch_scores, gt_boxes, gt_labels, stats, hist)
+
     stats, mAP = calculate_mAP(stats)
     print("mAP: {}".format(float(mAP)))
-    return stats
+    return stats, hist

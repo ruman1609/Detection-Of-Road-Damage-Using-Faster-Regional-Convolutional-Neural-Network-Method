@@ -10,15 +10,12 @@ choose_folder.destroy()
 
 files = os.listdir(folder)
 
-def preprocessing(filename, option, type):
+def preprocessing(filename, type):
     image = cv2.imread(filename, flags=cv2.IMREAD_COLOR)
     image = cv2.resize(image, [512, 512])
-    train = "train" if option else "test"
-    cv2.imwrite("../dataset/{}/{}/{}".format(train, type, filename.rsplit("/", 1)[1]),
+    cv2.imwrite("../dataset/{}/{}".format(type, filename.rsplit("/", 1)[1]),
                 image)
 
-option = input("1 for train, 0 for test\n")
-option = True if option == "1" else False
 type = input("1 for pothole, 2 for crack, 3 for plain\n")
 if type == "1":
     type = "pothole"
@@ -28,6 +25,6 @@ else:
     type = "plain"
 
 for file in files:
-    preprocessing("{}/{}".format(folder, file), option, type)
+    preprocessing("{}/{}".format(folder, file), type)
 
 print("DONE for {} images".format(len(files)))

@@ -14,7 +14,7 @@ def get_rpn_model(hyper_params):
     """
     img_size = hyper_params["img_size"]
     base_model = ResNet50(include_top=False, input_shape=(img_size, img_size, 3))
-    print(base_model.summary())
+    # print(base_model.summary())
     feature_extractor = base_model.get_layer("conv4_block6_out")
     output = Conv2D(1024, (3, 3), activation="relu", padding="same", name="rpn_conv")(feature_extractor.output)
     output = Conv2D(512, (3, 3), activation="relu", padding="same", name="rpn_conv_1")(output)

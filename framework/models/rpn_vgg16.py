@@ -14,10 +14,9 @@ def get_rpn_model(hyper_params):
     """
     img_size = hyper_params["img_size"]
     base_model = VGG16(include_top=False, input_shape=(img_size, img_size, 3))
-    print(base_model.summary())
+    # print(base_model.summary())
     feature_extractor = base_model.get_layer("block5_conv3")
-    output = Conv2D(1024, (3, 3), activation="relu", padding="same", name="rpn_conv")(feature_extractor.output)
-    output = Conv2D(512, (3, 3), activation="relu", padding="same", name="rpn_conv_1")(output)
+    output = Conv2D(512, (3, 3), activation="relu", padding="same", name="rpn_conv")(feature_extractor.output)
     rpn_cls_output = Conv2D(hyper_params["anchor_count"], (1, 1), activation="sigmoid", name="rpn_cls")(output)
     rpn_reg_output = Conv2D(hyper_params["anchor_count"] * 4, (1, 1), activation="linear", name="rpn_reg")(output)
     rpn_model = Model(inputs=base_model.input, outputs=[rpn_reg_output, rpn_cls_output])

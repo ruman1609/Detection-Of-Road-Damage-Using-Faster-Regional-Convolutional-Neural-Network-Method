@@ -1,4 +1,4 @@
-package com.rudyrachman16.skripsi.core
+package com.rudyrachman16.skripsi.core.repository
 
 import android.content.ContentValues
 import android.content.Context
@@ -11,19 +11,32 @@ import android.os.Environment
 import android.provider.MediaStore
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.content.FileProvider
+import com.rudyrachman16.skripsi.core.MapVal
+import com.rudyrachman16.skripsi.core.Status
+import com.rudyrachman16.skripsi.core.model.PredictionResult
+import com.rudyrachman16.skripsi.core.network.NetworkGetData
+import com.rudyrachman16.skripsi.core.network.services.ApiStatus
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Repository private constructor(private val context: Context) : IRepository {
+class Repository private constructor(
+    private val context: Context,
+    private val api: NetworkGetData
+) : IRepository {
 
     companion object {
         @Volatile
         private var INSTANCE: IRepository? = null
 
-        fun getInstance(context: Context) = INSTANCE ?: synchronized(this) {
-            INSTANCE ?: Repository(context).apply { INSTANCE = this }
+        fun getInstance(context: Context, api: NetworkGetData) = INSTANCE ?: synchronized(this) {
+            INSTANCE ?: Repository(context, api).apply { INSTANCE = this }
         }
     }
 
@@ -124,4 +137,23 @@ class Repository private constructor(private val context: Context) : IRepository
             }
         }
     }
+
+    override fun postPrediction(image: File): Flow<Status<PredictionResult>> = flow {
+        emit(Status.Loading)
+        when (val response = api.postPredictImage(image).first()) {
+            is ApiStatus.Success -> emit(Status.Success(MapVal.predFromResToMod(response.data)))
+            is ApiStatus.Empty -> emit(Status.Success(PredictionResult(-1, "", listOf())))
+            is ApiStatus.Failed -> emit(Status.Error(response.error))
+        }
+    }.flowOn(Dispatchers.IO)
+
+
+    override fun getPrediction(): Flow<Status<PredictionResult>> = flow {
+        emit(Status.Loading)
+        when (val response = api.getPrediction().first()) {
+            is ApiStatus.Success -> emit(Status.Success(MapVal.predFromResToMod(response.data)))
+            is ApiStatus.Empty -> emit(Status.Success(PredictionResult(-1, "", listOf())))
+            is ApiStatus.Failed -> emit(Status.Error(response.error))
+        }
+    }.flowOn(Dispatchers.IO)
 }

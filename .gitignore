@@ -5,5 +5,8 @@ framework/trained/*
 *.tfrecord
 dataset/*
 *.lnk
+*.tflite
+*.h5
 logs/*
 trained/*
+trained_roi/*

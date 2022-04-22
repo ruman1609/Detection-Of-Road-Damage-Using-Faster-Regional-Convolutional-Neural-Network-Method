@@ -4,4 +4,13 @@
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
     <string name="menu">Menu</string>
+    <string name="confirmation_choose_image">Confirmation Choose Image</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="sending_to_server">Sending to server…</string>
+    <string name="fetching_from_server">Wait data from server…</string>
+    <string name="numbering">%d.</string>
+    <string name="prediction_result">Prediction Result</string>
+    <string name="prediction_result_image">Prediction Result Image</string>
+    <string name="no_prediction_from_model">No prediction from model</string>
 </resources>

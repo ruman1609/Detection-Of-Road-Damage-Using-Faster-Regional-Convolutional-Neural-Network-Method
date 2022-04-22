@@ -62,6 +62,20 @@ def get_weight_path(model_type, backbone="vgg16"):
     model_path = os.path.join(main_path, "{}_{}_weights.h5".format(model_type, backbone))
     return model_path
 
+def get_model_roi_path(model_type, backbone="vgg16"):
+    """Generating model path from model_type value for save/load model weights.
+    inputs:
+        model_type = "rpn", "faster_rcnn"
+        backbone = "vgg16", "mobilenet_v2"
+    outputs:
+        model_path = os model path, for example: "trained/rpn_vgg16_weights.h5"
+    """
+    main_path = "trained_roi"
+    if not os.path.exists(main_path):
+        os.makedirs(main_path)
+    model_path = os.path.join(main_path, "{}_{}_model.h5".format(model_type, backbone))
+    return model_path
+
 
 def handle_args():
     """Handling of command line arguments using argparse library.

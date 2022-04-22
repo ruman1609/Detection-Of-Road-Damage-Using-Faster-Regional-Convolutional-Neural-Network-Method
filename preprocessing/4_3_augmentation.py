@@ -2,25 +2,40 @@ import xml.etree.ElementTree as ET, glob, cv2, os
 from xml.dom import minidom
 from shutil import copy2
 
-def prettify(elem):
-    """Return a pretty-printed XML string for the Element.
-    """
-    rough_string = ET.tostring(elem, 'utf-8')
-    reparsed = minidom.parseString(rough_string)
-    return reparsed.toprettyxml(indent="  ")
+# def prettify(elem):
+#     """Return a pretty-printed XML string for the Element.
+#     """
+#     rough_string = ET.tostring(elem, 'utf-8')
+#     reparsed = minidom.parseString(rough_string)
+#     return reparsed.toprettyxml(indent="  ")
 
 typeInput = int(input("0 for train, 1 for test\nInput: "))
 
 type = "train" if typeInput == 0 else "test"
 
+print("\n")
+
+imageInput = int(input("0 for not sharp,\n1 for sharpen image,\n2 for grayscale,\n3 for histogram equalization\nInput: "))
+
 filePath = f"../dataset/{type}"
-readyPath = f"{filePath}/ready"
+
+imageType = ""
+if imageInput == 0:
+    imageType = "ready"
+elif imageInput == 1:
+    imageType = "sharpen"
+elif imageInput == 2:
+    imageType = "grayscale"
+else:
+    imageType = "hist_equ"
+
+readyPath = f"{filePath}/{imageType}"
+
 augmentedPath = f"{filePath}/augmented"
 if not os.path.isdir(augmentedPath):
     os.mkdir(augmentedPath)
 
 def augmentation_maker(augmented, image, typeAug, filename):
-
     nameonly, extension = os.path.splitext(filename)
     imagename = f"{nameonly}_{typeAug}{extension}"
     xmlname = f"{nameonly}_{typeAug}.xml"
@@ -88,7 +103,6 @@ def augmentation_rotate_90l(root, width, height): # Rotate 90 Left
     rotate = cv2.rotate(image, cv2.ROTATE_90_COUNTERCLOCKWISE)
     augmentation_maker(augmented, rotate, "90lRotate", filename)
 
-index = 0
 for file in glob.glob(readyPath + "/*.xml"):
     tree = ET.parse(file)
     root = tree.getroot()

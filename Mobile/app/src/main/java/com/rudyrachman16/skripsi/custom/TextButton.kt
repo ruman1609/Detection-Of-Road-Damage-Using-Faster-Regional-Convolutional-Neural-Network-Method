@@ -44,11 +44,8 @@ class TextButton : AppCompatTextView {
         compoundDrawablePadding = 12.toPx.toInt()
         gravity = Gravity.CENTER_VERTICAL
 
-        val textAndImageColor = ContextCompat.getColor(context, R.color.black)
-        setTextColor(textAndImageColor)
         if (icon != null) {
             val iconCompat = DrawableCompat.wrap(icon!!)
-            iconCompat.setTint(textAndImageColor)
             setCompoundDrawablesWithIntrinsicBounds(iconCompat, null, null, null)
         }
 

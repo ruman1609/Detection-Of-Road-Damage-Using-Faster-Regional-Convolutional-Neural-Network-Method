@@ -1,4 +1,4 @@
-import tensorflow as tf
+import tensorflow as tf, random
 from PIL import Image, ImageDraw
 import matplotlib.pyplot as plt
 from . import bbox_utils
@@ -51,7 +51,9 @@ def draw_bboxes_with_labels(img, bboxes, label_indices, probs, labels):
         probs = (total_bboxes)
         labels = [labels string list]
     """
-    colors = tf.random.uniform((len(labels), 4), maxval=256, dtype=tf.int32)
+    colors = []
+    for i in range(len(labels)):
+        colors.append([random.randint(0, 255), random.randint(0, 255), random.randint(0, 255), 255])
     image = tf.keras.preprocessing.image.array_to_img(img)
     width, height = image.size
     draw = ImageDraw.Draw(image)
@@ -62,7 +64,7 @@ def draw_bboxes_with_labels(img, bboxes, label_indices, probs, labels):
         if width <= 0 or height <= 0:
             continue
         label_index = int(label_indices[index])
-        color = tuple(colors[label_index].numpy())
+        color = tuple(colors[label_index])
         label_text = "{0} {1:0.3f}".format(labels[label_index], probs[index])
         draw.text((x1 + 4, y1 + 2), label_text, fill=color)
         draw.rectangle((x1, y1, x2, y2), outline=color, width=3)

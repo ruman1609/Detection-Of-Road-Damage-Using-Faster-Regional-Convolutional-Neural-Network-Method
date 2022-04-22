@@ -13,4 +13,16 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="ButtonThemeConfirmation">
+        <item name="android:background">?colorPrimary</item>
+        <item name="android:drawablePadding">12dp</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+    <style name="ButtonThemeChoice">
+        <item name="android:minHeight">48dp</item>
+        <item name="drawableTint">@color/disabled_text</item>
+        <item name="android:textColor">@color/disabled_text</item>
+    </style>
 </resources>
