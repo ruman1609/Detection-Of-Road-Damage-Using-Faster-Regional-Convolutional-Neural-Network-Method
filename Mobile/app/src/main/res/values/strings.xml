@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PoCk Detection</string>
+    <string name="app_name">RoDa Detection</string>
     <string name="hello_blank_fragment">New Fragment</string>
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>

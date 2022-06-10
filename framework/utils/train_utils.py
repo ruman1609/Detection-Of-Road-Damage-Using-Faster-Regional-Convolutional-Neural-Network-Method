@@ -2,9 +2,16 @@ import tensorflow as tf
 import math
 from . import bbox_utils
 
+# DEFAULT = {
+#     "img_size": 512,
+#     "feature_map_shape": 32,
+#     "anchor_ratios": [1., 2., 1./2.],
+#     "anchor_scales": [128, 256, 512],
+# }
+
 DEFAULT = {
-    "img_size": 512,
-    "feature_map_shape": 32,
+    "img_size": 300,
+    "feature_map_shape": 19,
     "anchor_ratios": [1., 2., 1./2.],
     "anchor_scales": [128, 256, 512],
 }
@@ -24,6 +31,12 @@ def get_hyper_params(backbone, **kwargs):
         hyper_params = dictionary
     """
     hyper_params = RPN[backbone]
+
+    # Uncomment if needed
+    if backbone == "vgg16":
+        hyper_params["feature_map_shape"] -= 1
+    # Comment if not needed
+
     hyper_params["train_pre_nms_topn"] = 6000
     hyper_params["test_pre_nms_topn"] = 6000
     hyper_params["train_post_nms_topn"] = 2000

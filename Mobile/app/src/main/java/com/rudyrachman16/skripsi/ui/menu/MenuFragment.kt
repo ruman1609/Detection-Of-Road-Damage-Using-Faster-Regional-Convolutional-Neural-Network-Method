@@ -61,7 +61,7 @@ class MenuFragment : Fragment() {
                         val source = ImageDecoder.createSource(cr, uri)
                         ImageDecoder.decodeBitmap(source)
                     } else MediaStore.Images.Media.getBitmap(cr, uri)
-                    val resized = Bitmap.createScaledBitmap(bitmap, 512, 512, true)
+                    val resized = Bitmap.createScaledBitmap(bitmap, 300, 300, true)
                     bind.resultImage.setImageBitmap(resized)
                 }
             }
@@ -78,7 +78,7 @@ class MenuFragment : Fragment() {
                         val source = ImageDecoder.createSource(cr, uri)
                         ImageDecoder.decodeBitmap(source)
                     } else MediaStore.Images.Media.getBitmap(cr, uri)
-                    val resized = Bitmap.createScaledBitmap(bitmap, 512, 512, true)
+                    val resized = Bitmap.createScaledBitmap(bitmap, 300, 300, true)
                     bind.resultImage.setImageBitmap(resized)
                 }
             }

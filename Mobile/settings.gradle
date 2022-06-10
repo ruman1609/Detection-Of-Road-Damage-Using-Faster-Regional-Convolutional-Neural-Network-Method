@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "PoCk Detection"
+rootProject.name = "RoDa Detection"
 include ':app'

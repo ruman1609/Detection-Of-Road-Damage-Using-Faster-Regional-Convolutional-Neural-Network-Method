@@ -1,6 +1,6 @@
-import tensorflow as tf, random
-from PIL import Image, ImageDraw
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt, tensorflow as tf, random
+from PIL import Image, ImageDraw, ImageFont
+from matplotlib import font_manager
 from . import bbox_utils
 
 def draw_grid_map(img, grid_map, stride):
@@ -41,7 +41,7 @@ def draw_bboxes(imgs, bboxes):
         plt.imshow(img_with_bb)
         plt.show()
 
-def draw_bboxes_with_labels(img, bboxes, label_indices, probs, labels):
+def draw_bboxes_with_labels(img, bboxes, label_indices, probs, labels, font):
     """Drawing bounding boxes with labels on given image.
     inputs:
         img = (height, width, channels)
@@ -53,7 +53,7 @@ def draw_bboxes_with_labels(img, bboxes, label_indices, probs, labels):
     """
     colors = []
     for i in range(len(labels)):
-        colors.append([random.randint(0, 255), random.randint(0, 255), random.randint(0, 255), 255])
+        colors.append([random.randint(0, 128), 255, random.randint(0, 128), 255])
     image = tf.keras.preprocessing.image.array_to_img(img)
     width, height = image.size
     draw = ImageDraw.Draw(image)
@@ -65,8 +65,8 @@ def draw_bboxes_with_labels(img, bboxes, label_indices, probs, labels):
             continue
         label_index = int(label_indices[index])
         color = tuple(colors[label_index])
-        label_text = "{0} {1:0.3f}".format(labels[label_index], probs[index])
-        draw.text((x1 + 4, y1 + 2), label_text, fill=color)
+        label_text = f"{labels[label_index]} {(probs[index] * 100):.1f}%"
+        draw.text((x1 + 4, y1 + 2), label_text, fill=color, font=font)
         draw.rectangle((x1, y1, x2, y2), outline=color, width=3)
     #
     plt.figure()
@@ -74,6 +74,9 @@ def draw_bboxes_with_labels(img, bboxes, label_indices, probs, labels):
     plt.show()
 
 def draw_predictions(dataset, pred_bboxes, pred_labels, pred_scores, labels, batch_size):
+    font = font_manager.FontProperties(family='sans-serif', weight='bold')
+    file = font_manager.findfont(font)
+    font = ImageFont.truetype(file, 12)
     for batch_id, image_data in enumerate(dataset):
         imgs, _, _ = image_data
         img_size = imgs.shape[1]
@@ -82,4 +85,4 @@ def draw_predictions(dataset, pred_bboxes, pred_labels, pred_scores, labels, bat
         batch_bboxes, batch_labels, batch_scores = pred_bboxes[start:end], pred_labels[start:end], pred_scores[start:end]
         for i, img in enumerate(imgs):
             denormalized_bboxes = bbox_utils.denormalize_bboxes(batch_bboxes[i], img_size, img_size)
-            draw_bboxes_with_labels(img, denormalized_bboxes, batch_labels[i], batch_scores[i], labels)
+            draw_bboxes_with_labels(img, denormalized_bboxes, batch_labels[i], batch_scores[i], labels, font)

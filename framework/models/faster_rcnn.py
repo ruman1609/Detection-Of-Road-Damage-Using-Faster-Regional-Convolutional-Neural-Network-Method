@@ -17,7 +17,7 @@ class Decoder(Layer):
             1 to total label number
         pred_scores = (batch_size, top_n)
     """
-    def __init__(self, variances, total_labels, max_total_size=300, score_threshold=0.85, **kwargs):
+    def __init__(self, variances, total_labels, max_total_size=200, score_threshold=0.7, **kwargs):
         super(Decoder, self).__init__(**kwargs)
         self.variances = variances
         self.total_labels = total_labels
@@ -54,7 +54,7 @@ class Decoder(Layer):
                                                                     max_output_size_per_class=self.max_total_size,
                                                                     max_total_size=self.max_total_size,
                                                                     score_threshold=self.score_threshold,
-                                                                    iou_threshold=0.3)
+                                                                    iou_threshold=0.5)
         #
         return final_bboxes, final_labels, final_scores
 
@@ -98,14 +98,16 @@ class RoIBBox(Layer):
         #
         rpn_bbox_deltas *= variances
         rpn_bboxes = bbox_utils.get_bboxes_from_deltas(anchors, rpn_bbox_deltas)
+        # Added by me
+        topn = min(pre_nms_topn, rpn_labels.shape[1])
         #
-        _, pre_indices = tf.nn.top_k(rpn_labels, pre_nms_topn)
+        _, pre_indices = tf.nn.top_k(rpn_labels, topn)
         #
         pre_roi_bboxes = tf.gather(rpn_bboxes, pre_indices, batch_dims=1)
         pre_roi_labels = tf.gather(rpn_labels, pre_indices, batch_dims=1)
         #
-        pre_roi_bboxes = tf.reshape(pre_roi_bboxes, (batch_size, pre_nms_topn, 1, 4))
-        pre_roi_labels = tf.reshape(pre_roi_labels, (batch_size, pre_nms_topn, 1))
+        pre_roi_bboxes = tf.reshape(pre_roi_bboxes, (batch_size, topn, 1, 4))
+        pre_roi_labels = tf.reshape(pre_roi_labels, (batch_size, topn, 1))
         #
         roi_bboxes, _, _, _ = bbox_utils.non_max_suppression(pre_roi_bboxes, pre_roi_labels,
                                                           max_output_size_per_class=post_nms_topn,
