@@ -25,7 +25,7 @@ a.summary()
 
 And so the output will be like this
 <details><summary>View Output</summary><blockquote>
-```
+\```
 _________________________________________________________________
  Layer (type)                Output Shape              Param #
 =================================================================
@@ -72,7 +72,7 @@ Total params: 14,714,688
 Trainable params: 14,714,688
 Non-trainable params: 0
 _________________________________________________________________
-```
+\```
 </blockquote></details>
 for feature_map_shape valu can be seen in `block5_conv3` which is 18
 
@@ -85,7 +85,7 @@ a.summary()
 
 And so the output will be like this
 <details><summary>View Output</summary><blockquote>
-```
+\```
 __________________________________________________________________________________________________
  Layer (type)                   Output Shape         Param #     Connected to
 ==================================================================================================
@@ -569,7 +569,7 @@ Total params: 23,587,712
 Trainable params: 23,534,592
 Non-trainable params: 53,120
 __________________________________________________________________________________________________
-```
+\```
 </blockquote></details>
 for feature_map_shape valu can be seen in `conv4_block6_out` which is 19
 
@@ -583,7 +583,7 @@ Ignore the warning when you initialize MobileNetV2 model.
 
 And so the output will be like this
 <details><summary>View Output</summary><blockquote>
-```
+\```
 __________________________________________________________________________________________________
  Layer (type)                   Output Shape         Param #     Connected to
 ==================================================================================================
@@ -989,7 +989,7 @@ Total params: 2,257,984
 Trainable params: 2,223,872
 Non-trainable params: 34,112
 __________________________________________________________________________________________________
-```
+\```
 </blockquote></details>
 for feature_map_shape valu can be seen in `block_13_expand_relu` which is 19
 
