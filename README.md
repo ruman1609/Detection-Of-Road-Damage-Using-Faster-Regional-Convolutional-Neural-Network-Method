@@ -999,7 +999,8 @@ ________________________________________________________________________________
 </details>
 for feature_map_shape valu can be seen in `block_13_expand_relu` which is 19
 
-> This Python project framework forked from [FurkanOM TF Faster R-CNN Repository](https://github.com/FurkanOM/tf-faster-rcnn)
+
+> This Python project framework forked from [FurkanOM TF Faster R-CNN Repository](https://github.com/FurkanOM/tf-faster-rcnn)  
 > You can see my dataset [here](https://drive.google.com/drive/folders/1OocfroKRiXdaOxXxe71HCeD9TI_huDO6?usp=sharing)
 
 ## Android (Mobile)
