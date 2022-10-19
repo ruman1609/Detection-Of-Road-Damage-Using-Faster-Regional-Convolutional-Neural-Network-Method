@@ -76,7 +76,7 @@ _________________________________________________________________
 ```
 
 </details>
-for feature_map_shape valu can be seen in `block5_conv3` which is 18
+for feature_map_shape value can be seen in `block5_conv3` which is 18
 
 ### ResNet50
 ```python
@@ -575,7 +575,7 @@ ________________________________________________________________________________
 ```
 
 </details>
-for feature_map_shape valu can be seen in `conv4_block6_out` which is 19
+for feature_map_shape value can be seen in `conv4_block6_out` which is 19
 
 ### MobileNetV2
 ```python
@@ -997,8 +997,7 @@ ________________________________________________________________________________
 ```
 
 </details>
-for feature_map_shape valu can be seen in `block_13_expand_relu` which is 19
-
+for feature_map_shape value can be seen in `block_13_expand_relu` which is 19<br/><br/>
 
 > This Python project framework forked from [FurkanOM TF Faster R-CNN Repository](https://github.com/FurkanOM/tf-faster-rcnn)  
 > You can see my dataset [here](https://drive.google.com/drive/folders/1OocfroKRiXdaOxXxe71HCeD9TI_huDO6?usp=sharing)
