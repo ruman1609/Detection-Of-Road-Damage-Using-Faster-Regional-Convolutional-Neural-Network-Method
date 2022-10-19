@@ -8,7 +8,7 @@ Most of the operations performed during the implementation were carried out as d
 
 It's implemented and tested with **tensorflow 2.8**, and **Python 3.7.9**.
 
-[VGG-16](https://www.tensorflow.org/api_docs/python/tf/keras/applications/VGG16), [ResNet-50]  (https://www.tensorflow.org/api_docs/python/tf/keras/applications/resnet50/ResNet50), and [MobilenetV2](https://www.tensorflow.org/api_docs/python/tf/keras/applications/mobilenet_v2/MobileNetV2) are supported in this project
+[VGG-16](https://www.tensorflow.org/api_docs/python/tf/keras/applications/VGG16), [ResNet-50](https://www.tensorflow.org/api_docs/python/tf/keras/applications/resnet50/ResNet50), and [MobilenetV2](https://www.tensorflow.org/api_docs/python/tf/keras/applications/mobilenet_v2/MobileNetV2) are supported in this project
 
 This project use 300&times;300 size for input. Please change the feature_map_shape according to your input shape size.
 
