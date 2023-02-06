@@ -8,7 +8,7 @@ Most of the operations performed during the implementation were carried out as d
 
 It's implemented and tested with **tensorflow 2.8**, and **Python 3.7.9**.
 
-[VGG-16](https://www.tensorflow.org/api_docs/python/tf/keras/applications/VGG16), [ResNet-50]  (https://www.tensorflow.org/api_docs/python/tf/keras/applications/resnet50/ResNet50), and [MobilenetV2](https://www.tensorflow.org/api_docs/python/tf/keras/applications/mobilenet_v2/MobileNetV2) are supported in this project
+[VGG-16](https://www.tensorflow.org/api_docs/python/tf/keras/applications/VGG16), [ResNet-50](https://www.tensorflow.org/api_docs/python/tf/keras/applications/resnet50/ResNet50), and [MobilenetV2](https://www.tensorflow.org/api_docs/python/tf/keras/applications/mobilenet_v2/MobileNetV2) are supported in this project
 
 This project use 300&times;300 size for input. Please change the feature_map_shape according to your input shape size.
 
@@ -76,7 +76,7 @@ _________________________________________________________________
 ```
 
 </details>
-for feature_map_shape valu can be seen in `block5_conv3` which is 18
+for feature_map_shape value can be seen in `block5_conv3` which is 18
 
 ### ResNet50
 ```python
@@ -575,7 +575,7 @@ ________________________________________________________________________________
 ```
 
 </details>
-for feature_map_shape valu can be seen in `conv4_block6_out` which is 19
+for feature_map_shape value can be seen in `conv4_block6_out` which is 19
 
 ### MobileNetV2
 ```python
@@ -997,8 +997,7 @@ ________________________________________________________________________________
 ```
 
 </details>
-for feature_map_shape valu can be seen in `block_13_expand_relu` which is 19
-
+for feature_map_shape value can be seen in `block_13_expand_relu` which is 19<br/><br/>
 
 > This Python project framework forked from [FurkanOM TF Faster R-CNN Repository](https://github.com/FurkanOM/tf-faster-rcnn)  
 > You can see my dataset [here](https://drive.google.com/drive/folders/1OocfroKRiXdaOxXxe71HCeD9TI_huDO6?usp=sharing)
